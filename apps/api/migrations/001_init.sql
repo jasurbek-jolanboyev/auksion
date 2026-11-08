@@ -160,6 +160,10 @@ ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS starts_at timestamptz;
 ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS source_url text NOT NULL DEFAULT '';
 ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS currency char(3) NOT NULL DEFAULT 'UZS';
 ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS rooms smallint;
+ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS district text NOT NULL DEFAULT '';
+ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS source_lot_number text UNIQUE;
+ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS image_url text NOT NULL DEFAULT '';
+ALTER TABLE auction_lots ADD COLUMN IF NOT EXISTS source_payload jsonb NOT NULL DEFAULT '{}'::jsonb;
 CREATE TABLE IF NOT EXISTS auction_applications (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   lot_id uuid NOT NULL REFERENCES auction_lots(id),

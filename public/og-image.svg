@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="50" y1="0" x2="1150" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#F7F0FF"/><stop offset="1" stop-color="#FDECF4"/></linearGradient>
+    <linearGradient id="brand" x1="90" y1="94" x2="516" y2="514" gradientUnits="userSpaceOnUse"><stop stop-color="#8000FF"/><stop offset="1" stop-color="#E8368F"/></linearGradient>
+    <filter id="shadow" x="505" y="135" width="650" height="423" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#48236A" flood-opacity=".14"/></filter>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h1200v630H0z"/>
+  <circle cx="1050" cy="40" r="250" fill="#E7D5FF" fill-opacity=".5"/>
+  <circle cx="28" cy="620" r="230" fill="#F9D9E9" fill-opacity=".65"/>
+  <rect x="78" y="96" width="72" height="72" rx="22" fill="url(#brand)"/>
+  <path d="m93 132 21-18 21 18v21h-15v-14h-13v14H93v-21Z" fill="white" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+  <text x="172" y="148" fill="#241337" font-family="Arial,sans-serif" font-size="40" font-weight="700">Uy Joyla</text>
+  <text x="80" y="280" fill="#241337" font-family="Arial,sans-serif" font-size="64" font-weight="700">O‘z manzilingizni</text>
+  <text x="80" y="356" fill="#6F18C8" font-family="Arial,sans-serif" font-size="64" font-weight="700">shu yerdan toping</text>
+  <text x="84" y="419" fill="#665B70" font-family="Arial,sans-serif" font-size="25">Uylar · Yerlar · Rasmiy auksion lotlari</text>
+  <g filter="url(#shadow)">
+    <rect x="598" y="140" width="508" height="374" rx="32" fill="white"/>
+    <rect x="624" y="166" width="456" height="213" rx="22" fill="#F1E7FB"/>
+    <path d="m669 294 139-104 127 89 67-49 78 62v66H669v-64Z" fill="#D5B8F0"/>
+    <path d="m697 289 115-91 119 84v74H697v-67Z" fill="#8B40D1"/>
+    <path d="m794 277 61-49 64 48v80H794v-79Z" fill="#F7F0FF"/>
+    <path d="M820 356v-41a35 35 0 0 1 70 0v41" stroke="#6E1AB8" stroke-width="9"/>
+    <rect x="649" y="404" width="151" height="18" rx="9" fill="#EDE5F3"/>
+    <rect x="649" y="440" width="275" height="17" rx="8.5" fill="#F3EDF7"/>
+    <rect x="955" y="402" width="101" height="44" rx="15" fill="url(#brand)"/>
+    <path d="M981 423h49" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

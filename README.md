@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# auksion
-=======
 # e-uylar
 
 React ko‘chmas mulk platformasi, PostgreSQL API, alohida admin hostida ishlaydigan boshqaruv paneli va Telegram bot. Sayt, admin panel va bot bir xil PostgreSQL bazasidan foydalanadi.
@@ -656,4 +653,32 @@ E’lon tugmasi loyihadagi `#/property/:id` yoki `#/auction/:id` yo‘liga borad
 Sayt API’si va Telegram bot bitta PostgreSQL `properties` jadvalidan foydalanadi. Kanalga post ham shu jadvaldagi moderatsiyadan o‘tgan e’londan tuziladi. Sayt va bot qidiruvi faol e’lonlarning sarlavhasi, tavsifi, hududi, manzili, mo‘ljali, qulayliklari va boshqa tavsif maydonlaridagi so‘zlarni alohida kalit sifatida qidiradi. E’lon moderatsiyadan o‘tmaguncha ommaviy qidiruvda chiqmaydi. Kanal qidiruv manbasi emas; bot ham, sayt ham e’lonlarni bazadan oladi.
 
 `menga Krasnagorskdan uy kerak` kabi joy yaqinligini aniqlash uchun VPS’da `LOCATION_GEOCODER_URL` ga O‘zbekiston hududini qidirishni qo‘llaydigan geokoder endpointini kiriting. So‘rovdan joy nomi olinib koordinataga aylantiriladi, so‘ng e’lon kirituvchilar xaritada belgilagan koordinatalar `SEARCH_PLACE_RADIUS_KM` radiusi (standart 25 km) bo‘yicha bazada saralanadi. Geokoder sozlanmagan yoki javob bermaganida qidiruv e’lonlardagi matn bo‘yicha davom etadi; koordinatasi yo‘q e’lon uchun taxminiy nuqta yasalmaydi.
->>>>>>> 89bd3d0 (Ilk commit: loyihaning boshlang'ich kodi)
+
+## Cloudflare Pages va Telegram bot
+
+`wrangler.jsonc` Cloudflare Pages build output sifatida Vite yaratadigan `apps/web/dist` papkasini belgilaydi. Cloudflare Pages yoki Wrangler deploy’dan oldin build qiling:
+
+```sh
+npm ci
+npm run deploy:web
+```
+
+Cloudflare Pages build sozlamalari: build command `npm run build`, output directory `apps/web/dist`, root directory `/`. Build variable’lari `VITE_SITE_URL=https://example.uz` va `VITE_API_BASE_URL=/api/v1` bo‘lsin. Pages project’ning Functions variables’ida `API_ORIGIN=https://api.example.uz` sozlang; `functions/api` API so‘rovlarini, `functions/uploads` rasmlarni API hostga proxy qiladi. API VPS `.env` dagi `SITE_ORIGINS` qiymatiga sayt va adminning HTTPS originlarini vergul bilan ajratib kiriting. `SITE_DOMAIN`, `ADMIN_HOST` va `SESSION_COOKIE_DOMAIN` o‘zaro mos, umumiy nazorat qilinadigan domen ostida bo‘lishi kerak. Batafsil DNS, Pages variables va VPS deploy bosqichlari [deploy/README.md](deploy/README.md) faylida.
+
+Pages statik frontendni tarqatadi. `apps/api` uchun PostgreSQL bilan doimiy ishlaydigan Node/Docker serveri, Telegram bot uchun esa shu serverdagi alohida, bitta nusxali worker kerak. Bot pollingni Cloudflare Pages ichida ishga tushirib bo‘lmaydi. Loyiha ildizidagi `.env` faylida production `DATABASE_URL`, `POSTGRES_PASSWORD`, `OTP_SECRET` (kamida 32 belgi), `SITE_DOMAIN`, `ADMIN_HOST`, `SESSION_COOKIE_DOMAIN`, `SITE_ORIGINS`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID` va `ADMIN_TELEGRAM_IDS` ni sozlang. So‘ng Node hostda:
+
+```sh
+docker compose up -d --build db migrate api bot
+docker compose ps
+docker compose logs --tail=100 migrate api bot
+```
+
+`migrate` `auction_lots.district` va `auction_lots.source_lot_number` ustunlarini ham qo‘shadi. `bot` logida ishga tayyorligi ko‘ringach admin paneldagi **Ulangan xizmatlar → Telegram bot** holatini tekshiring. Bot tokeni va kanal ID’sini Cloudflare frontend build variable’lariga qo‘ymang; `TELEGRAM_BOT_TOKEN` faqat server secret/environment bo‘lsin. Bot kanalda administrator bo‘lishi va post yuborish huquqiga ega bo‘lishi kerak. Mahalliy ishga tushirishda `npm run bot` shu PostgreSQL va Telegram sozlamalariga ulanadi. Cloudflare Pages Functions uchun `API_ORIGIN` qo‘ying, Telegram tokenini Pages’ga qo‘ymang.
+
+## E-auksion lotlarini import qilish
+
+`npm run import:e-auksion` rasmiy `e-auksion.uz` ochiq lotlar API’sidan uy-joy va kvartira lotlarini o‘qib, ariza muddati hali tugamagan lotlarni ko‘rsatadi. Buyruq odatiy holatda faqat ko‘rib chiqish rejimida ishlaydi. Saqlash va Telegram kanaliga post navbatini yaratish uchun `npm run import:e-auksion -- --apply` bajaring. Standart import eng yaqin ariza muddatli 20 ta lot bilan cheklangan; miqdorni `--limit=40` kabi o‘zgartirish mumkin (1–200).
+
+Importdan avval `npm run db:migrate` bajaring. Lot raqami `source_lot_number` orqali takrorlanishdan himoyalanadi. Har bir import qilingan faol lot `auction_lots` jadvaliga kiradi va `outbox` orqali sayt/Telegram kanalida ko‘rsatiladi. Telegram kanalga post yuborish uchun bot worker ishlayotgan va kanalga admin huquqiga ega bo‘lishi kerak. Admin Telegram botidagi **➕ E-auksion lotini kiritish** tugmasi yoki `/addlot LOT_RAQAMI` buyrug‘i bilan bittalab rasmiy lot import qilishi mumkin.
+
+Faylma-fayl tavsif, lotni qo‘lda tekshirish va bot ishga tushirish bo‘yicha qo‘llanma [AUCTION_EAUKSION.md](AUCTION_EAUKSION.md) faylida.

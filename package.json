@@ -7,10 +7,13 @@
     "dev:api": "npm --workspace apps/api run dev",
     "dev:web": "npm --workspace apps/web run dev",
     "build": "npm --workspace apps/web run build",
+    "deploy:web": "npm run build && npx wrangler pages deploy --project-name auksion",
     "start": "npm --workspace apps/api start",
     "db:setup:local": "bash scripts/setup-local-db.sh",
     "db:migrate": "npm --workspace apps/api run migrate",
-    "bot": "npm --workspace apps/api run bot"
+    "bot": "npm --workspace apps/api run bot",
+    "import:e-auksion": "node scripts/import-e-auksion-lots.js",
+    "refresh:e-auksion-posts": "node scripts/refresh-e-auksion-channel-posts.js"
   },
   "devDependencies": { "concurrently": "^9.1.2" }
 }

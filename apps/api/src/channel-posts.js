@@ -123,7 +123,7 @@ function auctionPost(lot, options={}) {
   const types = {house:'UY-JOY',apartment:'KVARTIRA',land:'YER UCHASTKASI'};
   const objectType = types[lot.property_type] || '';
   const headline = `⚖️ AUKSIONDA${objectType ? ` — ${objectType}` : ''}`;
-  const address = [lot.region,lot.address].map(oneLine).filter(Boolean).join(', ');
+  const address = [lot.region,lot.district,lot.address].map(oneLine).filter(Boolean).join(', ');
   const fields = [];
   if (oneLine(lot.title)) fields.push(`📌 ${oneLine(lot.title)}`);
   if (address) fields.push(`📍 Manzil: ${address}`);
@@ -137,7 +137,7 @@ function auctionPost(lot, options={}) {
   const deadline = dateTashkent(lot.deadline);
   if (starts) fields.push(`📅 Auksion boshlanishi: ${starts}`);
   if (deadline) fields.push(`⏳ Arizalar muddati: ${deadline}`);
-  if (lot.id) fields.push(`🔢 Lot raqami: ${lot.id}`);
+  if (lot.source_lot_number || lot.id) fields.push(`🔢 Lot raqami: ${lot.source_lot_number || lot.id}`);
   const footer = [links.signature,links.channelHandle?`📢 Kanal: ${links.channelHandle}`:'',links.botUsername?`🤖 E’lon berish: @${links.botUsername}`:''];
   return fitCaption({headline,fields,description:lot.description,footer});
 }
@@ -145,6 +145,7 @@ function auctionPost(lot, options={}) {
 function propertyButtons(id, options={}, property={}) {
   const links = configuredLinks(options);
   const rows=[];
+  rows.push([{text:'📩 Ariza / bog‘lanish',url:'https://t.me/serinaqu'}]);
   if (links.siteUrl) rows.push([{text:'🏠 E’lonni ko‘rish · aloqa',url:`${links.siteUrl}/#/property/${encodeURIComponent(id)}`}]);
   const sellerTelegram=String(property.seller_telegram||'').replace(/^@/,'').trim();
   if(/^[A-Za-z0-9_]{5,32}$/.test(sellerTelegram))rows.push([{text:'✉️ Telegram’da yozish',url:`https://t.me/${sellerTelegram}`}]);
